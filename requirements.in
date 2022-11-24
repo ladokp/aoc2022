@@ -1,0 +1,8 @@
+advent-of-code-data
+colorama
+nose
+numpy
+parse
+pip-tools
+pytest
+sphinx
