@@ -27,7 +27,7 @@ class AocBaseClass(ABC):
         self.solutions = None
 
     DAY = -1
-    YEAR = 2021
+    YEAR = 2022
 
     @classmethod
     def get_date(cls):
