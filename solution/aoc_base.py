@@ -4,11 +4,12 @@ import pathlib
 import os
 from abc import ABC, abstractmethod
 from aocd import get_data
+from aocd.exceptions import PuzzleLockedError
 from pprint import pprint
 
 
 class AocBaseClass(ABC):
-    def __init__(self, /, test_suffix="", read_from_file=False):
+    def __init__(self, /, test_suffix=""):
         year, day = self.get_date()
         path = (
             f"{pathlib.Path(__file__).parent.parent}"
@@ -17,9 +18,12 @@ class AocBaseClass(ABC):
             f"{test_suffix}.txt"
         )
         if not os.path.isfile(path=path):
-            puzzle_input = get_data(day=day, year=year)
-            with open(path, "w") as f:
-                f.write(puzzle_input)
+            try:
+                puzzle_input = get_data(day=day, year=year)
+                with open(path, "w") as f:
+                    f.write(puzzle_input)
+            except PuzzleLockedError:
+                puzzle_input = None
         else:
             puzzle_input = pathlib.Path(path).read_text().strip()
         self.solved = False
