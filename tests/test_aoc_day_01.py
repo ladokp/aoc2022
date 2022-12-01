@@ -15,8 +15,8 @@ def exercise_solution():
 
 
 def test_parse_test_solution(test_solution):
-    """Test that input is parsed properly"""
-    assert test_solution.data == [24000, 11000, 10000, 6000, 4000]
+    """Test input is parsed properly"""
+    assert test_solution.data == (24000, 45000)
 
 
 def test_part1_test_solution(test_solution):

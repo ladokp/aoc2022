@@ -6,16 +6,14 @@ from solution.aoc_base import AocBaseClass
 class AocSolution(AocBaseClass):
     def _parse(self, puzzle_input):
         """Parse input"""
-        parsed_data = list()
-        elf_calories = 0
+        elves_calories = [0]
         for line in puzzle_input.split("\n"):
-            if line:
-                elf_calories += int(line)
+            if line.strip():
+                elves_calories[-1] += int(line)
             else:
-                parsed_data.append(elf_calories)
-                elf_calories = 0
-        parsed_data.append(elf_calories)
-        return list(sorted(parsed_data, reverse=True))
+                elves_calories.append(0)
+        elves_calories.sort()
+        return elves_calories[-1], sum(elves_calories[-3:])
 
     DAY = 1
 
@@ -25,7 +23,7 @@ class AocSolution(AocBaseClass):
 
     def part2(self):
         """Solve part 2"""
-        return sum(self.data[:3])
+        return self.data[1]
 
 
 if __name__ == "__main__":
