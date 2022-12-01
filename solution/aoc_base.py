@@ -1,31 +1,32 @@
 # aoc_base.py
 
-import pathlib
-import os
 from abc import ABC, abstractmethod
 from aocd import get_data
 from aocd.exceptions import PuzzleLockedError
+from pathlib import Path
 from pprint import pprint
 
 
 class AocBaseClass(ABC):
     def __init__(self, /, test_suffix=""):
         year, day = self.get_date()
-        path = (
-            f"{pathlib.Path(__file__).parent.parent}"
-            f"/resources/day_"
-            f"{day:02}"
-            f"{test_suffix}.txt"
+        puzzle_file_path = Path(__file__).parent.parent / Path(
+            f"resources/day_{day:02}{test_suffix}.txt"
         )
-        if not os.path.isfile(path=path):
-            try:
-                puzzle_input = get_data(day=day, year=year)
-                with open(path, "w") as f:
-                    f.write(puzzle_input)
-            except PuzzleLockedError:
+
+        match puzzle_file_path.is_file():
+            case True:
+                puzzle_input = Path(puzzle_file_path).read_text().strip()
+            case False:
+                try:
+                    puzzle_file_path.write_text(
+                        puzzle_input := get_data(day=day, year=year)
+                    )
+                except PuzzleLockedError:
+                    puzzle_input = None
+            case _:
                 puzzle_input = None
-        else:
-            puzzle_input = pathlib.Path(path).read_text().strip()
+
         self.solved = False
         self.data = self._parse(puzzle_input)
         self.solutions = None
