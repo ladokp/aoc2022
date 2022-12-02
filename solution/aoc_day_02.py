@@ -1,28 +1,33 @@
 # aoc_day_02.py
 
 from solution.aoc_base import AocBaseClass
+from types import MappingProxyType
 
-scores_part1 = {
-    ("B", "X"): 1,
-    ("C", "Y"): 2,
-    ("A", "Z"): 3,
-    ("A", "X"): 4,
-    ("B", "Y"): 5,
-    ("C", "Z"): 6,
-    ("C", "X"): 7,
-    ("A", "Y"): 8,
-    ("B", "Z"): 9,
-}
+scores_part1 = MappingProxyType(
+    {
+        ("B", "X"): 1,
+        ("C", "Y"): 2,
+        ("A", "Z"): 3,
+        ("A", "X"): 4,
+        ("B", "Y"): 5,
+        ("C", "Z"): 6,
+        ("C", "X"): 7,
+        ("A", "Y"): 8,
+        ("B", "Z"): 9,
+    }
+)
 
-scores_part2 = {
-    **scores_part1,
-    ("C", "X"): 2,
-    ("A", "X"): 3,
-    ("A", "Y"): 4,
-    ("C", "Y"): 6,
-    ("C", "Z"): 7,
-    ("A", "Z"): 8,
-}
+scores_part2 = MappingProxyType(
+    {
+        **scores_part1,
+        ("C", "X"): 2,
+        ("A", "X"): 3,
+        ("A", "Y"): 4,
+        ("C", "Y"): 6,
+        ("C", "Z"): 7,
+        ("A", "Z"): 8,
+    }
+)
 
 
 class AocSolution(AocBaseClass):
