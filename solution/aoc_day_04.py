@@ -9,22 +9,21 @@ class AocSolution(AocBaseClass):
         expanded_section_list = []
         for line in puzzle_input.split("\n"):
             sections = []
-            for section in line.split(","):
-                section = section.split("-")
-                sections.append(set(range(int(section[0]), int(section[1]) + 1)))
+            for elf in line.split(","):
+                lower_end, upper_end = tuple(map(int, elf.split("-")))
+                sections.append(set(range(lower_end, upper_end + 1)))
             expanded_section_list.append(sections)
-        return self._find_overlaps(expanded_section_list)
+        return self._count_overlaps(expanded_section_list)
 
     DAY = 4
 
     @staticmethod
-    def _find_overlaps(sections):
-        fully_overlaps = 0
-        overlaps = 0
+    def _count_overlaps(sections):
+        fully_overlaps = overlaps = 0
         for section in sections:
-            if intersect := section[0].intersection(section[1]):
+            if intersect := set.intersection(*section):
                 overlaps += 1
-                if intersect == section[0] or intersect == section[1]:
+                if intersect in section:
                     fully_overlaps += 1
         return fully_overlaps, overlaps
 
