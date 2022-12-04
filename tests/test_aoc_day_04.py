@@ -15,7 +15,7 @@ def exercise_solution():
 
 
 def test_parse_test_solution(test_solution):
-    """Test that input is parsed properly"""
+    """Test if input is parsed properly"""
     assert test_solution.data == (2, 4)
 
 
