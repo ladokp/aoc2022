@@ -16,14 +16,7 @@ def exercise_solution():
 
 def test_parse_test_solution(test_solution):
     """Test that input is parsed properly"""
-    assert test_solution.data == [
-        ({2, 3, 4}, {8, 6, 7}),
-        ({2, 3}, {4, 5}),
-        ({5, 6, 7}, {8, 9, 7}),
-        ({2, 3, 4, 5, 6, 7, 8}, {3, 4, 5, 6, 7}),
-        ({6}, {4, 5, 6}),
-        ({2, 3, 4, 5, 6}, {4, 5, 6, 7, 8}),
-    ]
+    assert test_solution.data == (2, 4)
 
 
 def test_part1_test_solution(test_solution):
