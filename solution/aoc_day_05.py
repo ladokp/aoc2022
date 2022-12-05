@@ -1,6 +1,6 @@
 # aoc_day_05.py
 from collections import deque, defaultdict
-from copy import copy, deepcopy
+from copy import deepcopy
 
 from parse import compile
 from solution.aoc_base import AocBaseClass
