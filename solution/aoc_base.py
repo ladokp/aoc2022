@@ -16,7 +16,7 @@ class AocBaseClass(ABC):
 
         match puzzle_file_path.is_file():
             case True:
-                puzzle_input = Path(puzzle_file_path).read_text().strip()
+                puzzle_input = Path(puzzle_file_path).read_text()
             case False:
                 try:
                     puzzle_file_path.write_text(
