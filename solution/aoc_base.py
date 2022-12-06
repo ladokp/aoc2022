@@ -23,9 +23,7 @@ class AocBaseClass(ABC):
                 puzzle_input = Path(puzzle_file_path).read_text()
             case False:
                 try:
-                    puzzle_file_path.write_text(
-                        puzzle_input := get_data(day=day, year=year)
-                    )
+                    puzzle_input = get_data(day=day, year=year)
                 except PuzzleLockedError:
                     chime.error(sync=True)
                     puzzle_input = None
