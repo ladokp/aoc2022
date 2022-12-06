@@ -3,8 +3,11 @@
 from abc import ABC, abstractmethod
 from aocd import get_data
 from aocd.exceptions import PuzzleLockedError
+import chime
 from pathlib import Path
 from pprint import pprint
+
+chime.theme("random")
 
 
 class AocBaseClass(ABC):
@@ -23,6 +26,7 @@ class AocBaseClass(ABC):
                         puzzle_input := get_data(day=day, year=year)
                     )
                 except PuzzleLockedError:
+                    chime.error(sync=True)
                     puzzle_input = None
             case _:
                 puzzle_input = None
@@ -63,6 +67,7 @@ class AocBaseClass(ABC):
     def solve(self):
         """Solve the puzzle for the given input"""
         self.solutions = self.part1(), self.part2()
+        chime.success(sync=True)
         self.solved = True
 
 
