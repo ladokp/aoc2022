@@ -3,6 +3,7 @@ from collections import deque, defaultdict
 from copy import deepcopy
 
 from parse import compile
+
 from solution.aoc_base import AocBaseClass
 
 

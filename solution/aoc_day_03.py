@@ -1,7 +1,8 @@
 # aoc_day_03.py
 
-from solution.aoc_base import AocBaseClass
 from string import ascii_letters
+
+from solution.aoc_base import AocBaseClass
 
 
 class AocSolution(AocBaseClass):

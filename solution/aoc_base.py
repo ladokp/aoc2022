@@ -1,11 +1,12 @@
 # aoc_base.py
 
 from abc import ABC, abstractmethod
-from aocd import get_data
-from aocd.exceptions import PuzzleLockedError
-import chime
 from pathlib import Path
 from pprint import pprint
+
+import chime
+from aocd import get_data
+from aocd.exceptions import PuzzleLockedError
 
 chime.theme("random")
 

@@ -1,6 +1,7 @@
 # test_aoc_template.py
 
 import pytest
+
 import solution.aoc_base as aoc
 
 

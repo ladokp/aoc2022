@@ -1,7 +1,8 @@
 # aoc_day_02.py
 
-from solution.aoc_base import AocBaseClass
 from types import MappingProxyType
+
+from solution.aoc_base import AocBaseClass
 
 scores_part1 = MappingProxyType(
     {

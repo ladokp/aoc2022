@@ -1,6 +1,7 @@
 # test_aoc_day_04.py
 
 import pytest
+
 import solution.aoc_day_04 as aoc
 
 
