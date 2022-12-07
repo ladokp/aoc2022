@@ -15,10 +15,10 @@ class AocSolution(AocBaseClass):
     DAY = 7
 
     @staticmethod
-    def _build_directory_tree(tree):
+    def _build_directory_tree(history):
         total_sizes, current_position, folder_stack = defaultdict(lambda: 0), 1, [""]
         while True:
-            current_row = tree[current_position]
+            current_row = history[current_position]
             if current_row.startswith("$"):
                 match current_row.split()[1:]:
                     case ["cd", ".."]:
@@ -28,9 +28,9 @@ class AocSolution(AocBaseClass):
                         folder_stack.append(folder)
                         current_position += 1
                     case ["ls"]:
-                        new_seek = current_position + 1
-                        while new_seek < len(tree):
-                            command = tree[new_seek]
+                        new_position = current_position + 1
+                        while new_position < len(history):
+                            command = history[new_position]
                             if command.startswith("$"):
                                 break
                             elif not command.startswith("dir"):
@@ -39,21 +39,21 @@ class AocSolution(AocBaseClass):
                                     total_sizes[
                                         "/".join(folder_stack[: index + 1])
                                     ] += size
-                            new_seek += 1
-                        current_position = new_seek
-                if current_position >= len(tree):
+                            new_position += 1
+                        current_position = new_position
+                if current_position >= len(history):
                     break
         return total_sizes
 
     def part1(self):
         """Solve part 1"""
-        return sum([size for size in self.data.values() if size <= 100_000])
+        return sum(size for size in self.data.values() if size <= 100_000)
 
     def part2(self):
         """Solve part 2"""
         unused_space = 70_000_000 - self.data[""]
         return min(
-            [size for size in self.data.values() if unused_space + size >= 30_000_000]
+            size for size in self.data.values() if unused_space + size >= 30_000_000
         )
 
 
