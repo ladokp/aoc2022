@@ -26,26 +26,14 @@ class AocSolution(AocBaseClass):
                 tail_y += 1 if head_y > tail_y else -1
             yield tail_x, tail_y
 
-    def part1(self):
-        """Solve part 1"""
-        head_x, head_y, tail_x, tail_y, seen = 0, 0, 0, 0, {(0, 0)}
-        for direction, steps in self.data:
-            move_x, move_y = self.OFFSET[direction]
-            for _ in range(steps):
-                head_x += move_x
-                head_y += move_y
-                for visited_position in self._get_positions(
-                    head_x, head_y, tail_x, tail_y
-                ):
-                    tail_x, tail_y = visited_position
-                    seen.add(visited_position)
-        return len(seen)
-
-    def part2(self):
-        """Solve part 2"""
-        rope, seen = [(0, 0)] * 10, set()
-        for direction, steps in self.data:
-            move_x, move_y = self.OFFSET[direction]
+    def _get_seen_points(self, /, knots_count, instructions=None, offset=None):
+        if not offset:
+            offset = self.OFFSET
+        if not instructions:
+            instructions = self.data
+        rope, seen = [(0, 0)] * knots_count, set()
+        for direction, steps in instructions:
+            move_x, move_y = offset[direction]
             for _ in range(steps):
                 head_x, head_y = rope[0]
                 rope[0] = head_x + move_x, head_y + move_y
@@ -58,6 +46,14 @@ class AocSolution(AocBaseClass):
                         rope[i] = visited_position
                 seen.add(rope[-1])
         return len(seen)
+
+    def part1(self):
+        """Solve part 1"""
+        return self._get_seen_points(knots_count=2)
+
+    def part2(self):
+        """Solve part 2"""
+        return self._get_seen_points(knots_count=10)
 
 
 if __name__ == "__main__":
