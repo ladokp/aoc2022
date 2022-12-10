@@ -14,7 +14,9 @@ class AocSolution(AocBaseClass):
         current_frame = []
         for index, character in enumerate(self.data, start=1):
             if character in current_frame:
-                current_frame = current_frame[current_frame.index(character) + 1 :]
+                current_frame = current_frame[
+                    current_frame.index(character) + 1 :
+                ]
             current_frame.append(character)
             if len(current_frame) == frame_length:
                 return index

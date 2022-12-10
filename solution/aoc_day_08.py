@@ -8,7 +8,8 @@ class AocSolution(AocBaseClass):
     def _parse(self, puzzle_input):
         """Parse input"""
         tree_map = tuple(
-            tuple(int(height) for height in line) for line in puzzle_input.split("\n")
+            tuple(int(height) for height in line)
+            for line in puzzle_input.split("\n")
         )
         tree_visibility_mask = []
         for line_index, line in enumerate(tree_map):
@@ -41,7 +42,9 @@ class AocSolution(AocBaseClass):
 
     @staticmethod
     def _is_upper_smaller(tree_map, line_index, column_index):
-        upper_heights = [tree_map[index][column_index] for index in range(line_index)]
+        upper_heights = [
+            tree_map[index][column_index] for index in range(line_index)
+        ]
         return max(upper_heights) < tree_map[line_index][column_index]
 
     @staticmethod
@@ -113,9 +116,15 @@ class AocSolution(AocBaseClass):
                     seen_trees_counter += 1
                 elif (
                     self._is_left_smaller(tree_map, line_index, column_index)
-                    or self._is_right_smaller(tree_map, line_index, column_index)
-                    or self._is_upper_smaller(tree_map, line_index, column_index)
-                    or self._is_lower_smaller(tree_map, line_index, column_index)
+                    or self._is_right_smaller(
+                        tree_map, line_index, column_index
+                    )
+                    or self._is_upper_smaller(
+                        tree_map, line_index, column_index
+                    )
+                    or self._is_lower_smaller(
+                        tree_map, line_index, column_index
+                    )
                 ):
                     tree_visibility_mask[line_index][column_index] = 1
                     seen_trees_counter += 1

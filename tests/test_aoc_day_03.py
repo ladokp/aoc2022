@@ -17,7 +17,10 @@ def exercise_solution():
 
 def test_parse_test_solution(test_solution):
     """Test if input is parsed properly"""
-    assert test_solution.data[:2] == (["p", "L", "P", "v", "t", "s"], ["r", "Z"])
+    assert test_solution.data[:2] == (
+        ["p", "L", "P", "v", "t", "s"],
+        ["r", "Z"],
+    )
 
 
 def test_part1_test_solution(test_solution):

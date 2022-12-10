@@ -41,7 +41,10 @@ class AocSolution(AocBaseClass):
             sprite_ = convert_array_6(sprite_, empty_pixel=" ")
         except KeyError:
             pass
-        self.part1_solution, self.part2_solution = sum(signal_strengths), sprite_
+        self.part1_solution, self.part2_solution = (
+            sum(signal_strengths),
+            sprite_,
+        )
 
     def part1(self):
         """Solve part 1"""

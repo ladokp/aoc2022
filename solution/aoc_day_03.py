@@ -10,7 +10,11 @@ class AocSolution(AocBaseClass):
         """Parse input"""
         rucksack_items = puzzle_input.split("\n")
         rucksacks_part_1 = [
-            "".join(set(line[: len(line) // 2]).intersection(line[len(line) // 2 :]))
+            "".join(
+                set(line[: len(line) // 2]).intersection(
+                    line[len(line) // 2 :]
+                )
+            )
             for line in rucksack_items
         ]
         rucksacks_part_2 = [

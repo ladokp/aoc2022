@@ -16,7 +16,11 @@ class AocSolution(AocBaseClass):
 
     @staticmethod
     def _build_directory_tree(history):
-        total_sizes, current_position, folder_stack = defaultdict(lambda: 0), 1, [""]
+        total_sizes, current_position, folder_stack = (
+            defaultdict(lambda: 0),
+            1,
+            [""],
+        )
         while current_position < len(history):
             current_row = history[current_position]
             match current_row.split():
@@ -35,7 +39,9 @@ class AocSolution(AocBaseClass):
                         elif not command.startswith("dir"):
                             size = int(command.split()[0])
                             for index in range(len(folder_stack)):
-                                total_sizes["/".join(folder_stack[: index + 1])] += size
+                                total_sizes[
+                                    "/".join(folder_stack[: index + 1])
+                                ] += size
                         new_position += 1
                     current_position = new_position
         return total_sizes
@@ -48,7 +54,9 @@ class AocSolution(AocBaseClass):
         """Solve part 2"""
         unused_space = 70_000_000 - self.data[""]
         return min(
-            size for size in self.data.values() if unused_space + size >= 30_000_000
+            size
+            for size in self.data.values()
+            if unused_space + size >= 30_000_000
         )
 
 
