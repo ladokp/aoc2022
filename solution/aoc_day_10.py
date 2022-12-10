@@ -1,6 +1,5 @@
 # aoc_day_10.py
-
-from parse import compile
+from advent_of_code_ocr import convert_array_6
 
 from solution.aoc_base import AocBaseClass
 
@@ -16,35 +15,33 @@ class AocSolution(AocBaseClass):
 
     DAY = 10
 
-    def _update_sprite(self, cycle, val):
-        x, y = cycle % 40, cycle // 40
-        if x in (val - 1, val, val + 1):
-            self.data[2][y][x] = "#"
-
-    def _check_cycle(self, x, val):
-        if x in (20, 60, 100, 140, 180, 220):
-            self.data[1].append(val * x)
-
     def _run_program(self):
-        instructions, vals, sprite = self.data
+        instructions, signal_strengths, sprite = self.data
         cycle, value = 0, 1
 
-        for instruction in self.data[0]:
-            if instruction == "noop":
-                self._update_sprite(cycle, value)
+        for instruction in instructions:
+            command, steps = (
+                split_instruction
+                if len(split_instruction := instruction.split()) == 2
+                else (split_instruction[0], 0)
+            )
+            cycles = {"noop": 1, "addx": 2}.get(command, 0)
+            for _ in range(cycles):
+                if (x := cycle % 40) in (value - 1, value, value + 1):
+                    sprite[cycle // 40][x] = "#"
                 cycle += 1
-                self._check_cycle(cycle, value)
-            else:
-                for _ in range(2):
-                    self._update_sprite(cycle, value)
-                    cycle += 1
-                    self._check_cycle(cycle, value)
-                value += int(instruction.split()[1])
+                if cycle in (20, 60, 100, 140, 180, 220):
+                    signal_strengths.append(value * cycle)
+            if command == "addx":
+                value += int(steps)
 
         self.solved = True
-        self.part1_solution, self.part2_solution = sum(vals), [
-            "".join(pixel) for pixel in sprite
-        ]
+        sprite_ = ["".join(pixel) for pixel in sprite]
+        try:
+            sprite_ = convert_array_6(sprite_, empty_pixel=" ")
+        except KeyError:
+            pass
+        self.part1_solution, self.part2_solution = sum(signal_strengths), sprite_
 
     def part1(self):
         """Solve part 1"""

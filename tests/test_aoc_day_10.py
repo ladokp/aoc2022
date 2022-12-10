@@ -44,11 +44,4 @@ def test_part1_exercise_solution(exercise_solution):
 
 def test_part2_exercise_solution(exercise_solution):
     """Test part 2 on exercise_solution input"""
-    assert exercise_solution.part2() == [
-        "###  #### #  # ####  ##    ##  ##  ###  ",
-        "#  #    # #  # #    #  #    # #  # #  # ",
-        "#  #   #  #### ###  #       # #    ###  ",
-        "###   #   #  # #    # ##    # #    #  # ",
-        "# #  #    #  # #    #  # #  # #  # #  # ",
-        "#  # #### #  # #     ###  ##   ##  ###  ",
-    ]
+    assert exercise_solution.part2() == "RZHFGJCB"
