@@ -2,88 +2,72 @@
 from copy import deepcopy
 from functools import reduce
 
+from parse import compile
+
 from solution.aoc_base import AocBaseClass
 
 
 class AocSolution(AocBaseClass):
     def _parse(self, puzzle_input):
         """Parse input"""
-        items = [
-            [63, 57],
-            [82, 66, 87, 78, 77, 92, 83],
-            [97, 53, 53, 85, 58, 54],
-            [50],
-            [64, 69, 52, 65, 73],
-            [57, 91, 65],
-            [67, 91, 84, 78, 60, 69, 99, 83],
-            [58, 78, 69, 65],
-        ]
+        items, monkey_operations, monkey_tests, modulo = [], [], [], 1
+        p = compile(
+            """Monkey {name:d}:
+  Starting items: {items:item_list}
+  Operation: new = {operation:operation_list}
+  Test: divisible by {divider:d}
+    If true: throw to monkey {true_monkey:d}
+    If false: throw to monkey {false_monkey:d}""",
+            {
+                "item_list": lambda items_: items.append(
+                    [int(number) for number in items_.split(",")]
+                ),
+                "operation_list": lambda operation: monkey_operations.append(
+                    eval(f"lambda old: {operation}")
+                ),
+            },
+        )
+        for monkey in puzzle_input.split("\n\n"):
+            parsed_monkey = p.parse(monkey)
+            monkey_tests.append(
+                eval(
+                    f'lambda item: {parsed_monkey["true_monkey"]}'
+                    f'if item % {parsed_monkey["divider"]} == 0'
+                    f'else {parsed_monkey["false_monkey"]}'
+                )
+            )
+            modulo *= parsed_monkey["divider"]
 
-        monkey_operations = [
-            lambda x: x * 11,
-            lambda x: x + 1,
-            lambda x: x * 7,
-            lambda x: x + 3,
-            lambda x: x + 6,
-            lambda x: x + 5,
-            lambda x: x * x,
-            lambda x: x + 7,
-        ]
-
-        monkey_tests = [
-            lambda x: 6 if x % 7 == 0 else 2,
-            lambda x: 5 if x % 11 == 0 else 0,
-            lambda x: 4 if x % 13 == 0 else 3,
-            lambda x: 1 if x % 3 == 0 else 7,
-            lambda x: 3 if x % 17 == 0 else 7,
-            lambda x: 0 if x % 2 == 0 else 6,
-            lambda x: 2 if x % 5 == 0 else 4,
-            lambda x: 5 if x % 19 == 0 else 1,
-        ]
-
-        return items, monkey_operations, monkey_tests
+        return items, monkey_operations, monkey_tests, modulo
 
     DAY = 11
 
+    def do_monkey_game(self, rounds, reducer):
+        items = deepcopy(self.data[0])
+        monkey_operations, monkey_tests, modulo = self.data[1:]
+        monkey_count = len(monkey_tests)
+        inspections = [0] * monkey_count
+
+        for _ in range(rounds):
+            for monkey in range(monkey_count):
+                for item in items[monkey]:
+                    inspections[monkey] += 1
+                    new_item = (
+                        monkey_operations[monkey](item) // reducer % modulo
+                    )
+                    items[monkey_tests[monkey](new_item)].append(new_item)
+                items[monkey].clear()
+        return reduce(
+            lambda x, y: x * y, sorted(inspections)[monkey_count - 2 :]
+        )
+
     def part1(self):
         """Solve part 1"""
-        inspections = [0 for _ in range(8)]
-        items = deepcopy(self.data[0])
-        monkey_operations = deepcopy(self.data[1])
-        monkey_tests = deepcopy(self.data[2])
-
-        for r in range(20):
-            for monkey in range(8):
-                for idx, item in enumerate(items[monkey]):
-                    inspections[monkey] += 1
-                    new_item = monkey_operations[monkey](item)
-                    new_item //= 3
-                    items[monkey_tests[monkey](new_item)].append(new_item)
-
-                items[monkey] = []
-        return reduce(
-            lambda x, y: x * y, sorted(inspections)[len(inspections) - 2 :]
-        )
+        return self.do_monkey_game(20, 3)
 
     def part2(self):
         """Solve part 2"""
-        inspections = [0 for _ in range(8)]
-        items = deepcopy(self.data[0])
-        monkey_operations = deepcopy(self.data[1])
-        monkey_tests = deepcopy(self.data[2])
-
-        for r in range(10000):
-            for monkey in range(8):
-                for idx, item in enumerate(items[monkey]):
-                    inspections[monkey] += 1
-                    new_item = monkey_operations[monkey](item)
-                    new_item %= 9699690
-                    items[monkey_tests[monkey](new_item)].append(new_item)
-
-                items[monkey] = []
-        return reduce(
-            lambda x, y: x * y, sorted(inspections)[len(inspections) - 2 :]
-        )
+        return self.do_monkey_game(10_000, 1)
 
 
 if __name__ == "__main__":

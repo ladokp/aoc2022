@@ -17,7 +17,17 @@ def exercise_solution():
 
 def test_parse_test_solution(test_solution):
     """Test if input is parsed properly"""
-    assert len(test_solution.data) == 3
+    assert len(test_solution.data) == 4
+
+
+def test_part1_test_solution(test_solution):
+    """Test part 1 on example input"""
+    assert test_solution.part1() == 10605
+
+
+def test_part2_test_solution(test_solution):
+    """Test part 2 on example input"""
+    assert test_solution.part2() == 2713310158
 
 
 def test_part1_exercise_solution(exercise_solution):
