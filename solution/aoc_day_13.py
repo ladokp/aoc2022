@@ -14,7 +14,7 @@ class AocSolution(AocBaseClass):
 
     DAY = 13
 
-    def compare_recursive(self, left, right):
+    def compare(self, left, right):
         if isinstance(left, int):
             if isinstance(right, int):
                 if left != right:
@@ -25,46 +25,48 @@ class AocSolution(AocBaseClass):
         elif isinstance(right, int):
             right = [right]
 
-        for i in range(min(len(left), len(right))):
-            if (rv := self.compare_recursive(left[i], right[i])) != 0:
-                return rv
+        for index in range(
+            min(left_length := len(left), right_length := len(right))
+        ):
+            if (return_value := self.compare(left[index], right[index])) != 0:
+                return return_value
 
         return (
             -1
-            if len(left) < len(right)
+            if left_length < right_length
             else 1
-            if len(left) > len(right)
+            if left_length > right_length
             else 0
         )
 
-    def _reorder_packets(self):
+    def _check_packets(self):
         self.part1_solution = 0
-        all_packets = []
+        packets = []
 
         for index, lines in enumerate(self.data, 1):
             line_a, line_b = lines
-            if self.compare_recursive(line_a, line_b) <= 0:
+            if self.compare(line_a, line_b) <= 0:
                 self.part1_solution += index
-            all_packets.append(line_a)
-            all_packets.append(line_b)
+            packets.append(line_a)
+            packets.append(line_b)
 
-        all_packets.extend(([[2]], [[6]]))
-        all_packets.sort(key=functools.cmp_to_key(self.compare_recursive))
-        self.part2_solution = (all_packets.index([[2]]) + 1) * (
-            all_packets.index([[6]]) + 1
+        packets.extend(([[2]], [[6]]))
+        packets.sort(key=functools.cmp_to_key(self.compare))
+        self.part2_solution = (packets.index([[2]]) + 1) * (
+            packets.index([[6]]) + 1
         )
         self.solved = True
 
     def part1(self):
         """Solve part 1"""
         if not self.solved:
-            self._reorder_packets()
+            self._check_packets()
         return self.part1_solution
 
     def part2(self):
         """Solve part 2"""
         if not self.solved:
-            self._reorder_packets()
+            self._check_packets()
         return self.part2_solution
 
 
