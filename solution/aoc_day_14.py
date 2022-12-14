@@ -1,104 +1,57 @@
 # aoc_day_14.py
-from copy import deepcopy
 
 from solution.aoc_base import AocBaseClass
 
 
 class AocSolution(AocBaseClass):
-    def __init__(self, /, test_suffix=""):
-        super().__init__(test_suffix)
-        self.grid = None
-
     def _parse(self, puzzle_input):
         """Parse input"""
-        return [line for line in puzzle_input.strip().split("\n")]
+        return puzzle_input.split("\n")
 
     DAY = 14
 
-    def _simulate_falling_sand(self, grid):
-        mx, my = -1_000, -1_000
-        while True:
-            for line in self.data:
-                pts = line.split(" -> ")
-                _pts = []
-                for pt in pts:
-                    x, y = map(int, pt.split(","))
-                    if x > mx:
-                        mx = x
-                    if y > my:
-                        my = y
-                    _pts.append((x, y))
-                for i in range(len(_pts) - 1):
-                    x1, y1 = _pts[i]
-                    x2, y2 = _pts[i + 1]
-                    if x1 == x2:
-                        for y in range(min(y1, y2), max(y1, y2) + 1):
-                            grid[(x1, y)] = "#"
-                    else:
-                        for x in range(min(x1, x2), max(x1, x2) + 1):
-                            grid[(x, y1)] = "#"
+    def simulate_sand(self, part):
+        blocked = set()
 
-            break
-        return deepcopy(grid), mx, my
+        for line in self.data:
+            points = line.split(" -> ")
+            for point_0, point_1 in zip(points, points[1:]):
+                x_0, y_0 = list(map(int, point_0.split(",")))
+                x_1, y_1 = list(map(int, point_1.split(",")))
+                for x in range(min(x_0, x_1), max(x_0, x_1) + 1):
+                    for y in range(min(y_0, y_1), max(y_0, y_1) + 1):
+                        blocked.add((x, y))
+
+        max_y = max(y for (x, y) in blocked)
+        count = 0
+        while True:
+            x_0 = 500
+            y_0 = 0
+            while True:
+                if (part == 1 and y_0 == max_y) or (500, 0) in blocked:
+                    return count
+                if part == 2 and y_0 == max_y + 1:
+                    break
+                if (x_0, y_0 + 1) not in blocked:
+                    y_0 += 1
+                elif (x_0 - 1, y_0 + 1) not in blocked:
+                    x_0 -= 1
+                    y_0 += 1
+                elif (x_0 + 1, y_0 + 1) not in blocked:
+                    x_0 += 1
+                    y_0 += 1
+                else:
+                    break
+            blocked.add((x_0, y_0))
+            count += 1
 
     def part1(self):
         """Solve part 1"""
-        self.grid, mx, my = self._simulate_falling_sand({})
-
-        sp = (500, 0)
-        sc = 0
-        steps = 0
-        while True:
-            x, y = sp
-            if (y > my and x > mx) or (steps > 10_000_000):
-                break
-            steps += 1
-            down_y = y + 1
-            if (x, down_y) not in self.grid:
-                sp = (x, down_y)
-                continue
-            else:
-                if (x - 1, down_y) not in self.grid:
-                    sp = (x - 1, down_y)
-                    continue
-                elif (x + 1, down_y) not in self.grid:
-                    sp = (x + 1, down_y)
-                    continue
-                else:
-                    self.grid[sp] = "o"
-                    sc += 1
-                    sp = (500, 0)
-        return sc
+        return self.simulate_sand(1)
 
     def part2(self):
         """Solve part 2"""
-        self.grid, mx, my = self._simulate_falling_sand({})
-
-        starting_point = (500, 0)
-        sand_count = 0
-        steps = 0
-        y_lim = my + 2
-        while True:
-            x, y = starting_point
-            steps += 1
-            down_y = y + 1
-            if (x, down_y) not in self.grid and down_y < y_lim:
-                starting_point = (x, down_y)
-                continue
-            else:
-                if (x - 1, down_y) not in self.grid and down_y < y_lim:
-                    starting_point = (x - 1, down_y)
-                    continue
-                elif (x + 1, down_y) not in self.grid and down_y < y_lim:
-                    starting_point = (x + 1, down_y)
-                    continue
-                else:
-                    if starting_point == (500, 0):
-                        break
-                    self.grid[starting_point] = "o"
-                    sand_count += 1
-                    starting_point = (500, 0)
-        return sand_count + 1
+        return self.simulate_sand(2)
 
 
 if __name__ == "__main__":
