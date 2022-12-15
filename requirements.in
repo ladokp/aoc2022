@@ -8,3 +8,4 @@ parse
 pip-tools
 pytest
 sphinx
+z3-solver
