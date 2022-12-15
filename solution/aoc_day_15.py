@@ -22,29 +22,28 @@ class AocSolution(AocBaseClass):
 
     DAY = 15
 
+    @staticmethod
+    def _abs(number):
+        return z3.If(number >= 0, number, -number)
+
     def part1(self, target_y=2_000_000):
         """Solve part 1"""
-        target_in_range = set()
-        target_beacons = set()
-        for x, y, bx, by in self.data:
+        target_in_range, target_beacons = set(), set()
+        for x, y, b_x, b_y in self.data:
             if y == target_y:
                 target_in_range.add(x)
-            if by == target_y:
-                target_beacons.add(bx)
+            if b_y == target_y:
+                target_beacons.add(b_x)
 
-            d = abs(x - bx) + abs(y - by)
-            dx = d - abs(y - target_y)
-            for x2 in range(x - dx, x + dx + 1):
-                target_in_range.add(x2)
+            d = abs(x - b_x) + abs(y - b_y)
+            d_x = d - abs(y - target_y)
+            for x_2 in range(x - d_x, x + d_x + 1):
+                target_in_range.add(x_2)
 
         return len(target_in_range.difference(target_beacons))
 
     def part2(self, border=4_000_000):
         """Solve part 2"""
-
-        def abs_(X):
-            return z3.If(X >= 0, X, -X)
-
         x_, y_ = z3.Int("X"), z3.Int("Y")
 
         o = z3.Optimize()
@@ -55,7 +54,7 @@ class AocSolution(AocBaseClass):
 
         for x, y, bx, by in self.data:
             d = abs(x - bx) + abs(y - by)
-            o.add(abs_(x_ - x) + abs_(y_ - y) > d)
+            o.add(self._abs(x_ - x) + self._abs(y_ - y) > d)
 
         o.check()
         return o.model().eval(x_ * 4_000_000 + y_)
