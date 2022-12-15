@@ -22,7 +22,7 @@ class AocSolution(AocBaseClass):
 
     DAY = 15
 
-    def part1(self, target_y=2000000):
+    def part1(self, target_y=2_000_000):
         """Solve part 1"""
         target_in_range = set()
         target_beacons = set()
@@ -39,7 +39,7 @@ class AocSolution(AocBaseClass):
 
         return len(target_in_range.difference(target_beacons))
 
-    def part2(self, border=4000000):
+    def part2(self, border=4_000_000):
         """Solve part 2"""
 
         def abs_(X):
@@ -58,7 +58,7 @@ class AocSolution(AocBaseClass):
             o.add(abs_(x_ - x) + abs_(y_ - y) > d)
 
         o.check()
-        return o.model().eval(x_ * 4000000 + y_)
+        return o.model().eval(x_ * 4_000_000 + y_)
 
 
 if __name__ == "__main__":
