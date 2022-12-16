@@ -1,7 +1,8 @@
 # aoc_day_15.py
 
-from solution.aoc_base import AocBaseClass
 import z3
+
+from solution.aoc_base import AocBaseClass
 
 
 class AocSolution(AocBaseClass):
