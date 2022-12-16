@@ -12,68 +12,91 @@ class AocSolution(AocBaseClass):
     def _parse(self, puzzle_input):
         """Parse input"""
         valves = {}
-        flowing_valves = []
         for line in puzzle_input.split("\n"):
-            groups = re.match(
-                "Valve (..) has flow rate=(.*); tunnels? leads? to valves?( .*,)* (..)",
-                line,
-            ).groups()
-            valve = {
-                "name": groups[0],
-                "flow": int(groups[1]),
-                "dest": [groups[3]],
-            }
-            if groups[2]:
-                for destination in groups[2][:-1].strip().split(","):
-                    valve["dest"].append(destination.strip())
-            if valve["flow"] > 0:
-                flowing_valves.append(groups[0])
-            valves[valve["name"]] = valve
-        return valves, flowing_valves
+            line = line.replace(",", "").split(" ")
+            label, rate, destinations = (
+                line[1],
+                int(re.findall("-?[\d]+", line[4])[0]),
+                line[9:],
+            )
+            destinations.append(label)
+            valves[label] = (rate, destinations)
+        return valves
 
     DAY = 16
 
-    def h(self, current, remaining, sum_, tkn):
-        if remaining <= 1:
-            return -1
-        current_valve = self.data[0][current]
-        if current_valve["flow"] > 0:
-            remaining -= 1
-            sum_ += remaining * current_valve["flow"]
-        return_value = sum_
-        for index in self.data[1]:
-            if index in tkn:
-                continue
-            tkn.add(index)
-            return_value = max(
-                self.h(
-                    index, remaining - self.dist[(current, index)], sum_, tkn
-                ),
-                return_value,
-            )
-            tkn.remove(index)
-        return return_value
-
     def part1(self):
         """Solve part 1"""
-        for valve_a in self.data[0].values():
-            for valve_b in self.data[0].values():
-                if valve_a == valve_b:
-                    self.dist[(valve_a["name"], valve_b["name"])] = 0
-                else:
-                    self.dist[(valve_a["name"], valve_b["name"])] = 1e9
-        for _ in range(len(self.data[0])):
-            for valve_a in self.data[0].values():
-                for valve_b in self.data[0].values():
-                    for destination in valve_b["dest"]:
-                        self.dist[(valve_a["name"], destination)] = min(
-                            self.dist[(valve_a["name"], destination)],
-                            self.dist[(valve_a["name"], valve_b["name"])] + 1,
+        current, next_, current_rate = {("AA", 0): ((), 0)}, {}, 0
+        for _ in range(0, 30):
+            for (position, rate), (opened, total) in current.items():
+                total += rate
+                for next_position in self.data[position][1]:
+                    next_opened, next_rate = opened, rate
+                    if position == next_position:
+                        if position in opened:
+                            continue
+                        next_opened = set(opened)
+                        next_opened.add(position)
+                        next_opened = tuple(next_opened)
+                        next_rate += self.data[position][0]
+
+                    if (
+                        next_position,
+                        next_rate,
+                    ) not in next_ or total > next_[
+                        (next_position, next_rate)
+                    ][
+                        1
+                    ]:
+                        next_[(next_position, next_rate)] = (
+                            next_opened,
+                            total,
                         )
-        return self.h("AA", 30, 0, set())
+            current = next_
+            next_ = {}
+            current_rate = max(
+                total for (position, rate), (opened, total) in current.items()
+            )
+        return current_rate
 
     def part2(self):
         """Solve part 2"""
+        current, next_, current_rate = {(("AA", "AA"), 0): ((), 0)}, {}, 0
+        for _ in range(0, 26):
+            for (position, rate), (opened, total) in current.items():
+                total += rate
+                for next_pos_0 in self.data[position[0]][1]:
+                    for next_pos_1 in self.data[position[1]][1]:
+                        next_pos = (next_pos_0, next_pos_1)
+                        next_opened, next_rate = opened, rate
+
+                        if position[0] == next_pos[0]:
+                            if position[0] in next_opened:
+                                continue
+                            next_opened = set(next_opened)
+                            next_opened.add(position[0])
+                            next_opened = tuple(next_opened)
+                            next_rate += self.data[position[0]][0]
+
+                        if position[1] == next_pos[1]:
+                            if position[1] in next_opened:
+                                continue
+                            next_opened = set(next_opened)
+                            next_opened.add(position[1])
+                            next_opened = tuple(next_opened)
+                            next_rate += self.data[position[1]][0]
+
+                        if (next_pos, next_rate) not in next_ or total > next_[
+                            (next_pos, next_rate)
+                        ][1]:
+                            next_[(next_pos, next_rate)] = (next_opened, total)
+            current = next_
+            next_ = {}
+            current_rate = max(
+                total for (position, rate), (opened, total) in current.items()
+            )
+        return current_rate
 
 
 if __name__ == "__main__":
