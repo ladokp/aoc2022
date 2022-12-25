@@ -1,6 +1,6 @@
 # aoc_day_19.py
-from collections import deque
 import re
+from collections import deque
 
 from solution.aoc_base import AocBaseClass
 
